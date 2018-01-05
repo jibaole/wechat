@@ -1,0 +1,35 @@
+﻿spring:
+    ## MySQL
+  datasource:
+      url: jdbc:mysql://127.0.0.1:3306/wechat?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      username: root
+      password: root
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+  freemarker:
+      charset: UTF-8
+      content-type: text/html
+      suffix: .ftl
+      template-loader-path: classpath:/templates/
+      request-context-attribute: true
+      settings:
+        #这里主要处理${xxx}为空值时报错，详见http://blog.csdn.net/achilles12345/article/details/38085225
+        classic_compatible: true
+        #template_update_delay: 0
+      #cache: false  #热部署时，关闭freemarker页面缓存
+  http:
+      encoding.charset: UTF-8
+      encoding.enable: true
+      encoding.force: true
+server:
+  port: 80
+  address: 127.0.0.1
+  tomcat:
+    uri-encoding: UTF-8
+# 微信公共账号-订阅号认证
+weixin:
+     appid: YOUAPPID
+     secret: YOUsecret
+
+oko :  properties ok !
+#spring.profiles.active=dev

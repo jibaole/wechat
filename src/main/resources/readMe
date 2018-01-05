@@ -1,0 +1,218 @@
+二、事件的数据格式为：
+关注/取消关注事件
+
+用户在关注与取消关注公众号时，微信会把这个事件推送到开发者填写的URL。方便开发者给用户下发欢迎消息或者做帐号的解绑。
+
+微信服务器在五秒内收不到响应会断掉连接，并且重新发起请求，总共重试三次
+
+关于重试的消息排重，推荐使用FromUserName + CreateTime 排重。
+
+假如服务器无法保证在五秒内处理并回复，可以直接回复空串，微信服务器不会对此作任何处理，并且不会发起重试。
+
+推送XML数据包示例：
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[FromUser]]></FromUserName>
+<CreateTime>123456789</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[subscribe]]></Event>
+</xml>
+
+
+参数说明：
+
+
+参数
+
+描述
+
+ToUserName  开发者微信号
+FromUserName  发送方帐号（一个OpenID）
+CreateTime  消息创建时间 （整型）
+MsgType  消息类型，event
+Event  事件类型，subscribe(订阅)、unsubscribe(取消订阅)
+
+使用网页调试工具调试该接口
+
+扫描带参数二维码事件
+
+用户扫描带场景值二维码时，可能推送以下两种事件：
+1. 如果用户还未关注公众号，则用户可以关注公众号，关注后微信会将带场景值关注事件推送给开发者。
+2. 如果用户已经关注公众号，则微信会将带场景值扫描事件推送给开发者。
+
+1. 用户未关注时，进行关注后的事件推送
+
+推送XML数据包示例：
+<xml><ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[FromUser]]></FromUserName>
+<CreateTime>123456789</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[subscribe]]></Event>
+<EventKey><![CDATA[qrscene_123123]]></EventKey>
+<Ticket><![CDATA[TICKET]]></Ticket>
+</xml>
+
+
+参数说明：
+
+
+参数
+
+描述
+
+ToUserName  开发者微信号
+FromUserName  发送方帐号（一个OpenID）
+CreateTime  消息创建时间 （整型）
+MsgType  消息类型，event
+Event  事件类型，subscribe
+EventKey  事件KEY值，qrscene_为前缀，后面为二维码的参数值
+Ticket  二维码的ticket，可用来换取二维码图片
+
+2. 用户已关注时的事件推送
+
+推送XML数据包示例：
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[FromUser]]></FromUserName>
+<CreateTime>123456789</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[SCAN]]></Event>
+<EventKey><![CDATA[SCENE_VALUE]]></EventKey>
+<Ticket><![CDATA[TICKET]]></Ticket>
+</xml>
+
+
+参数说明：
+
+
+参数
+
+描述
+
+ToUserName  开发者微信号
+FromUserName  发送方帐号（一个OpenID）
+CreateTime  消息创建时间 （整型）
+MsgType  消息类型，event
+Event  事件类型，SCAN
+EventKey  事件KEY值，是一个32位无符号整数，即创建二维码时的二维码scene_id
+Ticket  二维码的ticket，可用来换取二维码图片
+
+使用网页调试工具调试该接口
+
+上报地理位置事件
+
+用户同意上报地理位置后，每次进入公众号会话时，都会在进入时上报地理位置，或在进入会话后每5秒上报一次地理位置，公众号可以在公众平台网站中修改以上设置。上报地理位置时，微信会将上报地理位置事件推送到开发者填写的URL。
+
+推送XML数据包示例：
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[fromUser]]></FromUserName>
+<CreateTime>123456789</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[LOCATION]]></Event>
+<Latitude>23.137466</Latitude>
+<Longitude>113.352425</Longitude>
+<Precision>119.385040</Precision>
+</xml>
+
+
+参数说明：
+
+
+参数
+
+描述
+
+ToUserName  开发者微信号
+FromUserName  发送方帐号（一个OpenID）
+CreateTime  消息创建时间 （整型）
+MsgType  消息类型，event
+Event  事件类型，LOCATION
+Latitude  地理位置纬度
+Longitude  地理位置经度
+Precision  地理位置精度
+
+使用网页调试工具调试该接口
+
+自定义菜单事件
+
+用户点击自定义菜单后，微信会把点击事件推送给开发者，请注意，点击菜单弹出子菜单，不会产生上报。
+
+ 点击菜单拉取消息时的事件推送
+
+推送XML数据包示例：
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[FromUser]]></FromUserName>
+<CreateTime>123456789</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[CLICK]]></Event>
+<EventKey><![CDATA[EVENTKEY]]></EventKey>
+</xml>
+
+
+参数说明：
+
+
+参数
+
+描述
+
+ToUserName  开发者微信号
+FromUserName  发送方帐号（一个OpenID）
+CreateTime  消息创建时间 （整型）
+MsgType  消息类型，event
+Event  事件类型，CLICK
+EventKey  事件KEY值，与自定义菜单接口中KEY值对应
+
+
+
+
+ 点击菜单跳转链接时的事件推送
+
+推送XML数据包示例：
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[FromUser]]></FromUserName>
+<CreateTime>123456789</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[VIEW]]></Event>
+<EventKey><![CDATA[www.qq.com]]></EventKey>
+</xml>
+
+
+参数说明：
+
+
+参数
+
+描述
+
+ToUserName  开发者微信号
+FromUserName  发送方帐号（一个OpenID）
+CreateTime  消息创建时间 （整型）
+MsgType  消息类型，event
+Event  事件类型，VIEW
+EventKey  事件KEY值，设置的跳转URL
+
+三、自定义微信公众号菜单
+1、click：点击推事件
+  用户点击click类型按钮后，微信服务器会通过消息接口推送消息类型为event    的结构给开发者（参考消息接口指南），并且带上按钮中开发者填写的key值，开发者可以通过自定义的key值与用户进行交互；
+  2、view：跳转URL
+  用户点击view类型按钮后，微信客户端将会打开开发者在按钮中填写的网页URL，可与网页授权获取用户基本信息接口结合，获得用户基本信息。
+  3、scancode_push：扫码推事件
+  用户点击按钮后，微信客户端将调起扫一扫工具，完成扫码操作后显示扫描结果（如果是URL，将进入URL），且会将扫码的结果传给开发者，开发者可以下发消息。
+  4、scancode_waitmsg：扫码推事件且弹出“消息接收中”提示框
+  用户点击按钮后，微信客户端将调起扫一扫工具，完成扫码操作后，将扫码的结果传给开发者，同时收起扫一扫工具，然后弹出“消息接收中”提示框，随后可能会收到开发者下发的消息。
+  5、pic_sysphoto：弹出系统拍照发图
+  用户点击按钮后，微信客户端将调起系统相机，完成拍照操作后，会将拍摄的相片发送给开发者，并推送事件给开发者，同时收起系统相机，随后可能会收到开发者下发的消息。
+  6、pic_photo_or_album：弹出拍照或者相册发图
+  用户点击按钮后，微信客户端将弹出选择器供用户选择“拍照”或者“从手机相册选择”。用户选择后即走其他两种流程。
+  7、pic_weixin：弹出微信相册发图器
+  用户点击按钮后，微信客户端将调起微信相册，完成选择操作后，将选择的相片发送给开发者的服务器，并推送事件给开发者，同时收起相册，随后可能会收到开发者下发的消息。
+  8、location_select：弹出地理位置选择器
+  用户点击按钮后，微信客户端将调起地理位置选择工具，完成选择操作后，将选择的地理位置发送给开发者的服务器，同时收起位置选择工具，随后可能会收到开发者下发的消息。
+  9、media_id：下发消息（除文本消息）
+  用户点击media_id类型按钮后，微信服务器会将开发者填写的永久素材id对应的素材下发给用户，永久素材类型可以是图片、音频、视频、图文消息。请注意：永久素材id必须是在“素材管理/新增永久素材”接口上传后获得的合法id。
+  10、view_limited：跳转图文消息URL
+  用户点击view_limited类型按钮后，微信客户端将打开开发者在按钮中填写的永久素材id对应的图文消息URL，永久素材类型只支持图文消息。请注意：永久素材id必须是在“素材管理/新增永久素材”接口上传后获得的合法id。
