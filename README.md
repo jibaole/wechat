@@ -11,3 +11,6 @@
 ## 二、参考资料
    > - 感谢souvc分享：<http://www.souvc.com/?p=2230>
    >- 系列文章：<http://www.cnblogs.com/liuhongfeng/p/4846260.html>
+   
+   
+## 测试同步多个git平台   
